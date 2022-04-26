@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { ethers } = require('@nomiclabs/hardhat');
+const { ethers } = require('@nomiclabs/hardhat-ethers');
 
 describe('Token contract', function () {
   let Token;

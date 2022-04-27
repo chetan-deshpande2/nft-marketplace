@@ -1,31 +1,36 @@
-// SPDX-License-Identifier: MIT
+//SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.4;
+
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ERC115NFT is ERC1155 {
-    using Counters for Counters.Counter;
-    Counters.Counter private _nftID;
 
-    constructor()
-        ERC1155(
-            "https://gateway.pinata.cloud/ipfs/QmZbF3TXTXMSqqhkzwmZ33vYzxThQxMMdcPfjBUFDkihnb"
-        )
-    {}
+contract MyERC1155NFTToken is ERC1155,Ownable{
+    constructor() ERC1155("https://sourceOfNFT/{id}.json"){
 
-    function mint(bytes memory data) public returns (uint256 NFTId) {
-        _nftID.increment();
-        uint256 tokenID = _nftID.current();
-        super._mint(msg.sender, tokenID, 1, data);
-        return tokenID;
     }
 
-    function burn(
-        address from,
-        uint256 id,
-        uint256 amount
-    ) public {
-        super._burn(from, id, amount);
+    // provide the tokenID and the amount to mint 
+    function mint(uint _id, uint _tokenAmount) public onlyOwner{
+        _mint(msg.sender,_id,_tokenAmount,"");
     }
+
+    // provide the array of IDs([1,2,3]) and corresponding array of tokenAmounts ([50,1,10**18])
+    function mintBatch(uint256[] memory _ids,uint256[] memory _tokensAmounts) public onlyOwner{
+        _mintBatch(msg.sender,_ids,_tokensAmounts,"");
+    }
+
+    //burn a single type of token with the help of token id
+    function burn(uint _id,uint _tokenAmount) public onlyOwner{
+        _burn(owner(),_id,_tokenAmount);
+    }
+
+    //burn a batch of tokens
+    function burnBatch(uint[] memory _ids,uint[] memory _tokensAmounts) public onlyOwner{
+        _burnBatch(owner(),_ids,_tokensAmounts);
+    }
+
+
+    
 }

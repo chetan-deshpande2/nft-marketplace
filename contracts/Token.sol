@@ -1,11 +1,20 @@
-// SPDX-License-Identifier: MIT
 
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
-contract Token is ERC20 {
-    constructor() ERC20("LP Token", "LPT") {
-        _mint(msg.sender, 1000000 * 10**18);
-    }
+
+contract Token is ERC1155 {
+    uint256 public constant COIN = 1;
+
+
+    
+mapping (uint => string) metadataRegistry;
+
+constructor()  ERC1155("") {
+    _mint(msg.sender, COIN, 10000*10**18, "");
+}
+  
+    
 }

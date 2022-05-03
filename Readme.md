@@ -1,42 +1,25 @@
-# Advanced Sample Hardhat Project
 
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
+# NFT Marketplace
 
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
+A brief description of what this project does and who it's for
 
-Try running some of the following tasks:
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-npx hardhat help
-REPORT_GAS=true npx hardhat test
-npx hardhat coverage
-npx hardhat run scripts/deploy.js
-node scripts/deploy.js
-npx eslint '**/*.js'
-npx eslint '**/*.js' --fix
-npx prettier '**/*.{json,sol,md}' --check
-npx prettier '**/*.{json,sol,md}' --write
-npx solhint 'contracts/**/*.sol'
-npx solhint 'contracts/**/*.sol' --fix
-```
+## Features
 
-# Etherscan verification
+- Create Fungible Tokes with ERC1155 Standard
+- Create Non-Fungible Tokens ERC1155 Standard
+- Need to add 2.5% of Sell Price/Token(s) to Platform Fees.
+- Users can set Fractional Royalties of Multiple Owner(s) for the NFT’s Selling Price.
+- Users can Buy & Sell NFT using Fungible Token generated as mentioned above (Marketplace)
+Generalized solution to set Frational Royalties : Solidity do not accept the fractional number so if we have to pass 2.5% then we have to pass it like 25 / 1000
 
-To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
+Formula to set Fractional Royalties : n : number of digits of the number d : decimal point O : output
 
-In this project, copy the .env.example file to a file named .env, and then edit it to fill in the details. Enter your Etherscan API key, your Ropsten node URL (eg from Alchemy), and the private key of the account which will send the deployment transaction. With a valid .env file in place, first deploy your contract:
+O = n / 10n-d
 
-```shell
-hardhat run --network ropsten scripts/deploy.js
-```
+For Example :
 
-Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
+n = 2 d = 1 O = 25 / 102-1 O = 2.5
 
-```shell
-npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
-```
+NOTE : In smart contract it may happen that one has bought the nft but the owner of nft did not pass the nft and ownership of nft to the one who bought it. So to solve this issue we may use Escrow system or any alternative solutions.
+

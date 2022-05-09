@@ -2,11 +2,15 @@
 
 pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./NFT.sol";
 import "./Token.sol";
 import "hardhat/console.sol";
 
-contract Marketplace is ERC1155Holder {
+/// @title  ERC1155 NFT Marketplace Contract
+/// @notice You can use this contract for Listing and Buying NFT's
+
+contract Marketplace is ERC1155Holder, Ownable {
     NFT public nft;
     Token public token;
     address[] public partners;
@@ -75,7 +79,10 @@ contract Marketplace is ERC1155Holder {
      * @param _partners is address of partners
      * @param _royalty is to add royalty percentage
      */
-    function addPartners(address _partners, uint256 _royalty) external {
+    function addPartners(address _partners, uint256 _royalty)
+        external
+        onlyOwner
+    {
         require(_partners != address(0), "Partners address cannot be zero");
         require(_royalty != 0, "Royalty cannot be zero");
         partners.push(_partners);

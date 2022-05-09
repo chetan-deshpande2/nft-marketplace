@@ -71,6 +71,18 @@ contract Marketplace is ERC1155Holder {
     }
 
     /*
+     * @notice to add partners for splitting royalties
+     * @param _partners is address of partners
+     * @param _royalty is to add royalty percentage
+     */
+    function addPartners(address _partners, uint256 _royalty) external {
+        require(_partners != address(0), "Partners address cannot be zero");
+        require(_royalty != 0, "Royalty cannot be zero");
+        partners.push(_partners);
+        partnerRoyalty[_partners] = _royalty;
+    }
+
+    /*
      * @notice list the NFT on the marketplace
      * @param _tokenId is tokenId for NFT from ERC1155 contract
      * @param  _tokenAmount is amount user putting for sale
@@ -121,14 +133,11 @@ contract Marketplace is ERC1155Holder {
     ) external returns (Order memory) {
         Item storage itemDetails = item[_tokenId];
         uint256 price = itemDetails.price * _tokenAmount;
-        console.log("Price before", price);
         require(
             itemDetails.tokenAmount >= _tokenAmount,
             "Not Enough Tokens on sale"
         );
-        console.log("Balance of Buyer", token.balanceOf(_buyer, 1));
         require(token.balanceOf(_buyer, 1) >= price, "Not Enough tokens ");
-
         Order memory newOrder = Order({
             buyer: _buyer,
             seller: itemDetails.owner,
@@ -137,7 +146,6 @@ contract Marketplace is ERC1155Holder {
         uint256 royalty = itemDetails.royalty;
         uint256 fees = (price * (platFormFee)) / 1000;
         price = price - fees;
-        console.log("Price after fees", price);
 
         address creator = nft.creator(_tokenId);
         address owner = newOrder.seller;
@@ -156,7 +164,9 @@ contract Marketplace is ERC1155Holder {
 
     function claimRoyalties() external {
         uint256 creatorReward = creatorRewards[msg.sender];
+
         uint256 partnerReward = partnerRewards[msg.sender];
+
         uint256 finalReward = creatorReward + partnerReward;
 
         token.safeTransferFrom(address(this), msg.sender, 1, finalReward, "");
@@ -194,9 +204,16 @@ contract Marketplace is ERC1155Holder {
         creatorRewards[creator] += tokenAmountForCreator;
 
         token.safeTransferFrom(buyer, owner, 1, tokenAmountForOwner, "");
+        token.safeTransferFrom(
+            buyer,
+            address(this),
+            1,
+            tokenAmountForCreator + totalPartnerRoyalty,
+            ""
+        );
     }
 
-    ///@notice to claim the total token amount of platform genrated
+    /// *@notice to claim the total token amount of platform genrated
 
     function claimPlatformFees() external {
         uint256 platformBalance = token.balanceOf(address(this), 1);

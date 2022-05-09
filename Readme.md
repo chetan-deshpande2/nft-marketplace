@@ -35,6 +35,14 @@ function claimPlatformFees() external onlyOwner {}
 
 ```
 
+## Smart Contracts
+
+*  Token contract [0x75FE1cc2b877788C8e7327D7055DFFf1ddFd4D4f](https://rinkeby.etherscan.io/address/0x75fe1cc2b877788c8e7327d7055dfff1ddfd4d4f#code)
+
+*  NFT contract [0x695efcae1636aeb1f75af6a4540cca3bc08412ab](https://rinkeby.etherscan.io/address/0x695efcae1636aeb1f75af6a4540cca3bc08412ab#code)
+
+*  Marketplace  contract [0xae5e62aaa848a768d6ef65452d9cbe5a2227c17f](https://rinkeby.etherscan.io/address/0xae5e62aaa848a768d6ef65452d9cbe5a2227c17f#code)
+
 
 ## Features
 

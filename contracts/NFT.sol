@@ -2,26 +2,50 @@
 
 pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract ERC115NFT is ERC1155 {
-    using Counters for Counters.Counter;
-    Counters.Counter private _nftID;
+contract NFT is ERC1155 {
+
+
+    mapping(uint256 => address) public creator;
+    mapping(uint256 => string) private _tokenURIs;
+
+    event Mint(
+        address indexed owner,
+        uint256 id,
+        uint256 amount,
+        string tokenURI
+
+    );
 
     constructor() ERC1155("") {}
 
-    function mint(bytes memory data) public returns (uint256 NFTId) {
-        _nftID.increment();
-        uint256 tokenID = _nftID.current();
-        super._mint(msg.sender, tokenID, 1, data);
-        return tokenID;
+    function mint(uint256 id,uint256 amount,string memory _tokenURI) external {
+        creator[id] = msg.sender;
+      
+        _mint(msg.sender,id,amount,"");
+      
+        emit Mint(msg.sender,id, amount,_tokenURI);
+     
+
+
     }
 
-    function burn(
-        address from,
-        uint256 id,
-        uint256 amount
-    ) public {
-        super._burn(from, id, amount);
+
+
+    function _setTokenURI(uint256 tokenId, string memory uri) internal {
+        _tokenURIs[tokenId] = uri;
     }
+
+     function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC1155)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+
+       
+
+
 }

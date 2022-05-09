@@ -14,6 +14,12 @@ let owner;
 let account1;
 let account2;
 
+const impersonateAccount = async (address) => {
+  await network.provider.send("hardhat_impersonateAccount", [address]);
+  const signer = await ethers.getSigner(address);
+  return signer;
+};
+
 describe("Marketplace", () => {
   beforeEach(async () => {
     [owner, account1, account2] = await ethers.getSigners();
@@ -49,7 +55,7 @@ describe("Marketplace", () => {
 });
 
 describe("Create Market Item", () => {
-  it("will allow sender to put the NFT onsale if all the params are correct", async () => {
+  it("will allow sender to put the NFT on sale if all the params are correct", async () => {
     const tokenId = "1";
     const royalty = "5";
     const params = [account1.address, true, "1", "100", royalty];
@@ -61,5 +67,27 @@ describe("Create Market Item", () => {
     await expect(result)
       .to.emit(marketplace, "createMarketItem")
       .withArgs("1", 100, account1.address, params);
+  });
+});
+
+describe("Buy NFT from marketplace", () => {
+  it("will allow sender to buy the NFT if all the params are correct", async () => {
+    const tokenId = "1";
+    const royalty = "5";
+    const partnerRoyalty = "2";
+    const price = 1000;
+
+    const creatorReward = price.mul(royalty).div(100);
+    const partnerReward = price.mul(partnerRoyalty).div(100);
+    await nft.connect(account1).mint(tokenId, 10, "0x00");
+    await nft.connect(account1).setApprovalForAll(marketplace.address, true);
+    await marketplace.connect(account1).createMarketItem(1, 10, 1000);
+    await marketplace.connect(signer).buyToken(1, 10, account2.address);
+    expect(await marketplace.creatorRewards(account1.address)).to.be.equal(
+      BigNumber.from(creatorReward)
+    );
+    expect(await marketplace.partnerRewards(account2.address)).to.be.equal(
+      partnerReward
+    );
   });
 });

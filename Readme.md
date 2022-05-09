@@ -1,7 +1,39 @@
 
 # NFT Marketplace
 
-A brief description of what this project does and who it's for
+ ## Overview
+
+ NFT marketplace contract allows user to put their
+NFT's on sale and buy NFT'sale
+
+
+## Documentation
+
+
+
+* List the NFT on marketplace . Only admin can execute this function
+```bash 
+function createMarketItem() external onlyOwner{}
+
+```
+
+* Anyone can buy NFT's from marketplace
+```bash 
+function buyToken() external {}
+
+```
+
+* To add the partners for royalties. Only Admin can add Partners
+```bash 
+function addPartners() external onlyOwner{}
+
+```
+* To Claim platform fees . Only admin can execute this function
+```bash 
+function claimPlatformFees() external onlyOwner {}
+
+
+```
 
 
 ## Features
@@ -22,4 +54,55 @@ For Example :
 n = 2 d = 1 O = 25 / 102-1 O = 2.5
 
 NOTE : In smart contract it may happen that one has bought the nft but the owner of nft did not pass the nft and ownership of nft to the one who bought it. So to solve this issue we may use Escrow system or any alternative solutions.
+
+
+##  Project Setup
+
+Clone the project
+
+```bash
+  git clone https://github.com/chetan-deshpande2/nft-marketplace.git
+
+```
+
+Go to the project directory
+
+```bash
+  cd nft-marketplace
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+
+
+##  Running Tests
+
+1. To Compile
+```bash 
+npx hardhat compile
+npx hardhat clean
+```
+
+2. To run tests, run the following command
+
+```bash
+  npx hardhat test
+  
+```
+3. To deploy on Test Network
+
+* create .env file
+
+ * See .env.example and fill the values in .env file
+
+* Run
+
+```bash 
+npx hardhat run scripts/deploy.js --network rinkeby
+```
+
 

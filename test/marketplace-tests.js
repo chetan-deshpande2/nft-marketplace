@@ -75,9 +75,9 @@ describe("Marketplace", () => {
       const result = await marketplace
         .connect(account1)
         .createItem(tokenId, amount, price);
-      // await expect(result)
-      //   .to.emit(marketplace, "createItem")
-      //   .withArgs(tokenId, account1.address, price, amount);
+      await expect(result)
+        .to.emit(marketplace, "createItem")
+        .withArgs(tokenId, account1.address, price, amount);
     });
   });
 

@@ -46,6 +46,11 @@ contract Marketplace is ERC2981, Ownable {
         token = IERC1155(_token);
         platFormFeesAddress = _platFormFeesAddress;
     }
+      /*
+     * @notice to add partners for splitting royalties
+     * @param _partners is address of partners
+     * @param _royalty is to add royalty percentage
+     */
 
     function addPartners(address _partners, uint256 _royalty)
         external
@@ -57,11 +62,7 @@ contract Marketplace is ERC2981, Ownable {
         partnerRoyalty[_partners] = _royalty;
     }
 
-    /*
-     * @notice to add partners for splitting royalties
-     * @param _partners is address of partners
-     * @param _royalty is to add royalty percentage
-     */
+  
     function createItem(
         uint256 _id,
         uint256 _price,

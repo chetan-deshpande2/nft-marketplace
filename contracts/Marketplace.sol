@@ -11,12 +11,13 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "hardhat/console.sol";
 
 contract Marketplace is ERC2981, Ownable {
+    address[] public partners;
+
+    uint256 platFormFee = 25;
+    address platFormFeesAddress;
+
     IERC1155 public nftContract;
     IERC1155 public token;
-
-    address public platFormFeesAddress;
-    address[] public partners;
-    uint256 private platFormFee = 25;
 
     /*
      * @dev  to create Item for Marketplace
@@ -46,11 +47,6 @@ contract Marketplace is ERC2981, Ownable {
         platFormFeesAddress = _platFormFeesAddress;
     }
 
-    /*
-     * @notice to add partners for splitting royalties
-     * @param _partners is address of partners
-     * @param _royalty is to add royalty percentage
-     */
     function addPartners(address _partners, uint256 _royalty)
         external
         onlyOwner
@@ -62,12 +58,10 @@ contract Marketplace is ERC2981, Ownable {
     }
 
     /*
-     * @notice list the NFT on the marketplace
-     * @param _tokenId is tokenId for NFT from ERC1155 contract
-     * @param  _tokenAmount is amount user putting for sale
-     * @param _price is price  per nft
+     * @notice to add partners for splitting royalties
+     * @param _partners is address of partners
+     * @param _royalty is to add royalty percentage
      */
-
     function createItem(
         uint256 _id,
         uint256 _price,
@@ -98,8 +92,8 @@ contract Marketplace is ERC2981, Ownable {
         address owner = idToItem[_id].owner;
 
         uint256 fees = (price * (platFormFee)) / 1000;
-        console.log("fees", fees);
         price = price - fees;
+
         nftContract.safeTransferFrom(
             address(this),
             msg.sender,
@@ -122,8 +116,10 @@ contract Marketplace is ERC2981, Ownable {
                 ""
             );
         }
+
         _royalty += _royalty;
         uint256 remeaningAmount = price - _royalty;
+
         token.safeTransferFrom(address(this), owner, 1, remeaningAmount, "");
     }
 

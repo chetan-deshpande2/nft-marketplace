@@ -10,14 +10,21 @@ import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "hardhat/console.sol";
 
-contract Market is ERC2981, Ownable {
-    address[] public partners;
-
-    uint256 platFormFee = 25;
-    address platFormFeesAddress;
-
+contract Marketplace is ERC2981, Ownable {
     IERC1155 public nftContract;
     IERC1155 public token;
+
+    address public platFormFeesAddress;
+    address[] public partners;
+    uint256 private platFormFee = 25;
+
+    /*
+     * @dev  to create Item for Marketplace
+     * @param owner of the nft
+     * @param id is nft id
+     * @param  price  per nft
+     * amount is nft count to list on marketplace
+     */
 
     struct Item {
         uint256 id;
@@ -39,6 +46,11 @@ contract Market is ERC2981, Ownable {
         platFormFeesAddress = _platFormFeesAddress;
     }
 
+    /*
+     * @notice to add partners for splitting royalties
+     * @param _partners is address of partners
+     * @param _royalty is to add royalty percentage
+     */
     function addPartners(address _partners, uint256 _royalty)
         external
         onlyOwner
@@ -48,6 +60,13 @@ contract Market is ERC2981, Ownable {
         partners.push(_partners);
         partnerRoyalty[_partners] = _royalty;
     }
+
+    /*
+     * @notice list the NFT on the marketplace
+     * @param _tokenId is tokenId for NFT from ERC1155 contract
+     * @param  _tokenAmount is amount user putting for sale
+     * @param _price is price  per nft
+     */
 
     function createItem(
         uint256 _id,
@@ -64,6 +83,13 @@ contract Market is ERC2981, Ownable {
             ""
         );
     }
+
+    /*
+     * @notice buy function for buying the nft's
+     * @param _tokenId of nft's for buying
+     * @param _tokenAmount to amount willing to bought by user
+
+     */
 
     function buy(uint256 _id, uint256 _amount) external {
         uint256 price = (idToItem[_id].price) * _amount;

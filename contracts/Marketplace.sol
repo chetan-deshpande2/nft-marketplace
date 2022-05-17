@@ -11,8 +11,6 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "hardhat/console.sol";
 
 contract Market is ERC2981, Ownable {
-    Counters.Counter private _itemIds;
-    Counters.Counter private _itemsSold;
     address[] public partners;
 
     uint256 platFormFee = 25;
@@ -23,8 +21,7 @@ contract Market is ERC2981, Ownable {
 
     struct Item {
         uint256 id;
-        address creator;
-        uint256 royalty;
+        address owner;
         uint256 price;
         uint256 amount;
     }
@@ -54,14 +51,11 @@ contract Market is ERC2981, Ownable {
 
     function createItem(
         uint256 _id,
-        uint256 _royalty,
         uint256 _price,
         uint256 _amount
     ) external {
-        require(_price > 0, "Must be at least 1 Wei");
-        //    _itemIds.increment();
-        // uint256 itemId = _itemIds.current();
-        idToItem[_id] = Item(_id, msg.sender, _royalty, _price, _amount);
+        require(_price > 0, "Must be greater than 0 ");
+        idToItem[_id] = Item(_id, msg.sender, _price, _amount);
         nftContract.safeTransferFrom(
             msg.sender,
             address(this),
@@ -75,9 +69,10 @@ contract Market is ERC2981, Ownable {
         uint256 price = (idToItem[_id].price) * _amount;
 
         uint256 tokenId = idToItem[_id].id;
-        address owner = idToItem[_id].creator;
+        address owner = idToItem[_id].owner;
 
         uint256 fees = (price * (platFormFee)) / 1000;
+        console.log("fees", fees);
         price = price - fees;
         nftContract.safeTransferFrom(
             address(this),
@@ -92,10 +87,7 @@ contract Market is ERC2981, Ownable {
         uint256 _royalty;
         for (uint256 i = 0; i < partners.length; i++) {
             partnersAddress = partners[i];
-            console.log("Partners Address", partnersAddress);
             _royalty = (price * partnerRoyalty[partnersAddress]) / 100;
-            _royalty += _royalty;
-            console.log("Royalty of partners", _royalty);
             token.safeTransferFrom(
                 address(this),
                 partnersAddress,
@@ -104,9 +96,8 @@ contract Market is ERC2981, Ownable {
                 ""
             );
         }
-
+        _royalty += _royalty;
         uint256 remeaningAmount = price - _royalty;
-        console.log("Sellers amount", remeaningAmount);
         token.safeTransferFrom(address(this), owner, 1, remeaningAmount, "");
     }
 

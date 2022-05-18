@@ -34,6 +34,14 @@ contract Marketplace is ERC2981, Ownable {
         uint256 amount;
     }
 
+    event ItemCreated(
+        address indexed owner,
+        uint256 indexed id,
+        uint256 price,
+        uint256 amount
+    );
+    event Buy(address indexed buyer, uint256 indexed id, uint256 amount);
+
     mapping(uint256 => Item) public idToItem;
     mapping(address => uint256) public partnerRoyalty;
 
@@ -46,7 +54,8 @@ contract Marketplace is ERC2981, Ownable {
         token = IERC1155(_token);
         platFormFeesAddress = _platFormFeesAddress;
     }
-      /*
+
+    /*
      * @notice to add partners for splitting royalties
      * @param _partners is address of partners
      * @param _royalty is to add royalty percentage
@@ -62,7 +71,6 @@ contract Marketplace is ERC2981, Ownable {
         partnerRoyalty[_partners] = _royalty;
     }
 
-  
     function createItem(
         uint256 _id,
         uint256 _price,
@@ -77,6 +85,7 @@ contract Marketplace is ERC2981, Ownable {
             _amount,
             ""
         );
+        emit ItemCreated(msg.sender, _id, _price, _amount);
     }
 
     /*
@@ -122,6 +131,7 @@ contract Marketplace is ERC2981, Ownable {
         uint256 remeaningAmount = price - _royalty;
 
         token.safeTransferFrom(address(this), owner, 1, remeaningAmount, "");
+        emit Buy(msg.sender, _id, _amount);
     }
 
     function supportsInterface(bytes4 interfaceId)

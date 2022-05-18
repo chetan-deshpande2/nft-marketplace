@@ -13,13 +13,13 @@ NFT's on sale and buy NFT'sale
 
 * List the NFT on marketplace . Only admin can execute this function
 ```bash 
-function createMarketItem() external onlyOwner{}
+function createItem() external onlyOwner{}
 
 ```
 
 * Anyone can buy NFT's from marketplace
 ```bash 
-function buyToken() external {}
+function buy() external {}
 
 ```
 
@@ -28,20 +28,15 @@ function buyToken() external {}
 function addPartners() external onlyOwner{}
 
 ```
-* To Claim platform fees . Only admin can execute this function
-```bash 
-function claimPlatformFees() external onlyOwner {}
 
-
-```
 
 ## Smart Contracts
 
-*  Token contract [0x75FE1cc2b877788C8e7327D7055DFFf1ddFd4D4f](https://rinkeby.etherscan.io/address/0x75fe1cc2b877788c8e7327d7055dfff1ddfd4d4f#code)
+*  Token contract [0x723087448039b0e79c7428f6134465d65a2c7347](https://rinkeby.etherscan.io/address/0x723087448039b0e79c7428f6134465d65a2c7347#code)
 
-*  NFT contract [0x695efcae1636aeb1f75af6a4540cca3bc08412ab](https://rinkeby.etherscan.io/address/0x695efcae1636aeb1f75af6a4540cca3bc08412ab#code)
+*  NFT contract [0xe7aceba828126b404098865f6015e66696efd819](https://rinkeby.etherscan.io/address/0xe7aceba828126b404098865f6015e66696efd819#code)
 
-*  Marketplace  contract [0xae5e62aaa848a768d6ef65452d9cbe5a2227c17f](https://rinkeby.etherscan.io/address/0xae5e62aaa848a768d6ef65452d9cbe5a2227c17f#code)
+*  Marketplace  contract [0xf6ca21a098e7d0b18ff7dfd2ac6dee9f3dc46319](https://rinkeby.etherscan.io/address/0xf6ca21a098e7d0b18ff7dfd2ac6dee9f3dc46319#code)
 
 
 ## Features
